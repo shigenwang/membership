@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<meta charset="UTF-8" />
+	<title>维修记录添加</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link th:href="@{/static/css/right4.css}" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+	<div class="container bg-white">
+       <div class="row">
+        <div class="col-md-8 col-md-offset-2  col-xs-8 col-xs-offset-2   col-lg-8 col-lg-offset-2 ">
+             <br>
+            <form class="form-horizontal" th:action="@{/maintain/save/1}" th:object="${maintain}" method="post">
+             <br>
+             	<div style="border-left:#3399FF solid 2px; padding:10px;"><h4>增加维修记录</h4></div>
+                <hr>
+                 <div class="form-group">
+                    <label for="" class="col-sm-3 control-label">设备选择</label>
+                    <div class="col-sm-7">
+                    	<select id="equipment_id" name="equipment_id" class="form-control">
+		                    <option th:each="var : ${equipmentList}" th:value="${var.id}" th:text="${var.name}">Thymus Thymi</option>
+		                </select>
+                    </div>
+                  </div>	
+              	<div class="form-group">
+                    <label for="" class="col-sm-3 control-label">维修人员</label>
+                    <div class="col-sm-7">
+                      <input type="text" class="form-control" name="mauntauners" id="mauntauners" placeholder="请输入维修人员"/>
+                    </div>
+                  </div>
+                  <!-- <div class="form-group">
+                    <label for="" class="col-sm-3 control-label">维修人员电话</label>
+                    <div class="col-sm-7">
+                      <input type="text" class="form-control" name="company" id="company" placeholder="请输入公司名称"/>
+                    </div>
+                  </div> -->
+                  
+                  <div class="form-group">
+                    <label for="" class="col-sm-3 control-label">维护时间</label>
+                    <div class="col-sm-7">
+                    <input type="text" class="form-control" name="maintenance_time" id="maintenance_time" placeholder="请输入维护时间"/>
+                    </div>
+                  </div>
+                <div class="form-group">
+                 <br>
+                    <div class="col-sm-1 col-sm-offset-7 ">  
+                    <button type="submit" class="btn btn-primary">取消</button>
+                    </div>
+                    <div class="col-sm-1 col-sm-offset-1 ">
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+              </form>    
+       	</div>
+       </div>      
+	</div>
+	<script th:src="@{/static/js/jquery-2.1.4.js}"></script>
+</body>
+</html>

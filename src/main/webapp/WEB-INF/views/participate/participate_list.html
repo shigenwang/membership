@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <script type="text/javascript" th:src="@{/static/js/jquery-2.1.4.js}"></script>
+<link th:href="@{/static/css/style.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/static/css/bootstrap-combined.min.css}" rel="stylesheet" type="text/css" />
+<script type="javascript">
+$(function(){   
+    //导航切换
+    $(".imglist li").click(function(){
+        $(".imglist li.selected").removeClass("selected")
+        $(this).addClass("selected");
+    })  
+})  
+</script>
+</head>
+<body>
+
+	<div class="place">
+		<span>位置：</span>
+		<ul class="placeul">
+			<li><a href="#">首页</a></li>
+			<li><a href="#">增加设备</a></li>
+		</ul>
+	</div>
+
+	<a th:href="@{'/participate/add/'+${session.user.membership_id}}">增加</a>
+	<table class="imgtable">
+	  <thead>
+	    <tr>
+	      <th>课程id</th>
+	      <th>课程名</th>
+	      <th>课程类型</th>
+	      <!-- <th>创建时间</th> -->
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr th:each="participate : ${participatePage.list}" >
+	      <td th:text="${participate.course_id}">1,001</td>
+	      <td th:text="${participate.course_name}">Lorem</td>
+	      <td th:text="${participate.course_type}">Lorem</td>
+	    </tr>
+	  </tbody>
+	</table>
+	
+	<div class="pagin">
+		<div class="message">
+			共<i class="blue" th:text="${participatePage.page.count}"></i>条记录，页次&nbsp;<i
+				class="blue" th:text="${currentPage }+'/'+${participatePage.page.total }">&nbsp;</i>页
+		</div>
+		<ul class="paginList" th:if="${participatePage.page.endPageIndex ne 0}">
+			<li class="paginItem"><a href="javascript: gotoPage(1)"
+				th:text="首页" style="cursor: hand;"> <span class="pagepre"></span>
+			</a></li>
+			<li th:each="num : ${#numbers.sequence(participatePage.page.beginPageIndex, participatePage.page.endPageIndex)}" class="paginItem">
+				<a th:if="${num eq currentPage}" href="javascript:void(0);">
+                         <font color="red" th:text="${num}"></font>
+                    </a>
+
+                    <a th:if="${not(num eq currentPage)}" th:href="'/membership/participate/list/'+${num}">
+                        <span th:text="${num}"></span>
+                    </a>				
+			</li>
+			<li class="paginItem"><a th:text="尾页"
+				th:href="'/membership/participate/list/'+${participatePage.page.total}"
+				style="cursor: hand;"><span class="pagenxt"></span> </a></li>
+		</ul>
+	</div>
+	</body>
+<script type="text/javascript">
+	function gotoPage( pageNum ){
+		window.location.href = "/membership/participate/list/" + pageNum;
+	}
+</script>
+</html>

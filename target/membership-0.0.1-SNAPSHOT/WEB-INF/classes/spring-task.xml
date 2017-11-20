@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+	<context:annotation-config />
+	<!-- 自动扫描task包下的所有类，使其认为spring mvc的控制器 -->
+	<context:component-scan base-package="com.future.membership.task"></context:component-scan>
+	<task:annotation-driven/>
+	<!-- 1、定义任务 -->
+	<!--要定时执行的方法 -->
+	<!-- <bean id="testTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			指定要定时执行的方法所在类，将定时任务定义成bean
+			<ref bean="testTask" />
+		</property>
+		<property name="targetMethod">
+			指定定时执行的方法
+			<value>execute</value>
+		</property>
+		<property name="concurrent">
+			指定目标封装为有状态的任务，有状态的任务不能并发执行，无状态的任务可并发执行
+			<value>false</value>
+		</property>
+	</bean> -->
+
+	<!-- 2、任务执行策略配置 -->
+	<!-- 2.1、指定重复间隔的定时任务 -->
+	<!-- 调度时间设置 -->
+	<!-- <bean id="testTaskJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail">
+			<ref bean="testTaskJob" />
+		</property>
+		延时启动时间，单位ms
+		<property name="startDelay" value="10000"></property>
+		重复间隔时间，单位ms
+		<property name="repeatInterval" value="1000">
+		</property>
+	</bean> -->
+
+	<!-- 2.2、按周期执行的任务 -->
+	<!-- 定义触发时间 -->
+	<!-- <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="testTaskJob" />
+		</property>
+		cron表达式，此处是每天中午12点执行
+		<property name="cronExpression">
+			<value>0 0/1 * * * ?</value>
+		</property>
+	</bean> -->
+
+	<!-- 3、启动任务 -->
+	<!--启动工作 -->
+	<!-- <bean lazy-init="false"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				这里添加多个定时任务触发器，对应第2步的bean id
+				<ref bean="testTaskJobTrigger" />
+			</list>
+		</property>
+	</bean> -->
+
+	<!-- <bean id="recommendTask" class="com.future.membership.task.RecommendTask">
+		
+	</bean> -->
+	<!-- Spring 自带定时任务 -->
+	<!-- <task:scheduled-tasks>
+		每隔一分钟执行一次
+		<task:scheduled ref="recommendTask" method="execute" cron="0 0/1 * * * ?" />
+	</task:scheduled-tasks> -->
+</beans>

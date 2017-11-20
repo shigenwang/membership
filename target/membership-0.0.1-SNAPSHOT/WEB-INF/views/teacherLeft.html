@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<link th:href="@{/static/css/style.css}" rel="stylesheet" type="text/css" />
+<script th:src="@{/static/js/jquery.js}"></script>
+<script type="text/javascript">
+$(function(){   
+    //导航切换
+    $(".menuson li").click(function(){
+        $(".menuson li.active").removeClass("active")
+        $(this).addClass("active");
+    });
+    
+    $('.title').click(function(){
+        var $ul = $(this).next('ul');
+        $('dd').find('ul').slideUp();
+        if($ul.is(':visible')){
+            $(this).next('ul').slideUp();
+        }else{
+            $(this).next('ul').slideDown();
+        }
+    });
+})  
+</script>
+</head>
+<body style="background: #f3f3f3;">
+
+<dl class="leftmenu">
+	<dd>
+		<dd>
+			<div class="title">
+				<span><img th:src="@{/static/images/leftico01.png}" /></span>信息管理
+			</div>
+			<ul class="menuson">
+				<li><cite></cite><a th:href="@{'/teacher/list/'+${session.user.teacher_id}+'/1'}" target="right">个人信息</a><i></i></li>
+				<li><cite></cite><a th:href="@{'/teacher/upPassword/'+${session.user.teacher_id}}" target="right">修改密码</a><i></i></li>
+			</ul>
+		</dd>
+		<dd>
+			<div class="title">
+				<span><img th:src="@{/static/images/leftico01.png}" /></span>课程管理
+			</div>
+			<ul class="menuson">
+				<li><cite></cite><a th:href="@{'/course/list/'+${session.user.teacher_id}+'/1'}" target="right">课程管理</a><i></i></li>
+			</ul>
+		</dd>
+	<dd>
+</dl>
+</body>
+</html>

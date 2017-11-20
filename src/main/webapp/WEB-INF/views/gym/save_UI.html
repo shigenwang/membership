@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<meta charset="UTF-8" />
+	<title>房间添加</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link th:href="@{/static/css/right4.css}" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+	<div class="container bg-white">
+       <div class="row">
+            <form class="form-horizontal" th:action="@{/gym/save/1}" th:object="${gym}" method="post">
+             	<div style="border-left:#3399FF solid 2px; padding:10px;"><h4>增加健身房</h4></div>
+                <hr>
+                 <div class="form-group">
+                    <label for="" class="col-sm-3 control-label"> 健身房的名称</label>
+                    <div class="col-sm-8">
+                      <input type="text" name="name" id="name" class="form-control" placeholder="请输入名称"/>
+                    </div>
+                  </div>	
+                  <div class="form-group">
+                    <label for="" class="col-sm-3 control-label">健身房编号</label>
+                    <div class="col-sm-8">
+                      <input type="text" name="roomNumber" id="roomNumber" class="form-control" placeholder="请输入健身房编号"/>
+                    </div>
+                  </div>
+                 <div class="form-group">
+                    <label for="" class="col-sm-3 control-label">详细介绍</label>
+                    <div class="col-sm-8">
+                     	<textarea class="form-control" rows="7" name="description" id="description" placeholder="请输入详细介绍"></textarea>
+                    </div>
+                  </div>
+                <div class="form-group">    
+                 <br>
+                    <div class="col-sm-1 col-sm-offset-8 ">  
+                    	<button type="reset" class="btn btn-primary">取消</button>
+                    </div>
+                    <div class="col-sm-1 col-sm-offset-1 ">
+                    	<button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+              </form>    
+       	</div>
+      </div>
+
+	<!-- <form th:action="@{/gym/save/1}" th:object="${gym}" method="post">
+				<input type="text" name="name" id="name" placeholder="请输入名称"/>
+				<input type="text" name="description" id="description" placeholder="请输入详细介绍"/>
+				<input type="text" name="roomNumber" id="roomNumber" placeholder="请输入房间号"/>
+			<button type="submit">增加</button>
+	</form> -->
+<script th:src="@{/static/js/jquery-2.1.4.js}"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+ <title>健身会员管理</title>
+<link th:href="@{/static/css/bootstrap.css}" rel="stylesheet">
+<!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>s
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<frameset rows="64.3,*" frameborder="no" border="0" framespacing="0" >
+    <frame src="head.html" scrolling="No" noresize="noresize" marginwidth="0" marginheight="0" >
+       <frameset cols="226,*">
+           <frame src="teacherLeft.html" frameborder="no" scrolling="No"  noresize="noresize" />
+           <frame name="right" id="main" src="" frameborder="no" scrolling="auto" noresize marginwidth="0" marginheight="0" />
+       <frame src="UntitledFrame-1"></frameset>
+</frameset>
+
+<noframes>
+</noframes>
+
+<body>
+<script th:src="@{/static/js/jquery-2.1.4.js}"></script>
+<script th:src="@{/static/js/bootstrap.js}"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <script type="text/javascript" th:src="@{/static/js/jquery-2.1.4.js}"></script>
+<link th:href="@{/static/css/style.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/static/css/bootstrap-combined.min.css}" rel="stylesheet" type="text/css" />
+<script type="javascript">
+$(function(){   
+    //导航切换
+    $(".imglist li").click(function(){
+        $(".imglist li.selected").removeClass("selected")
+        $(this).addClass("selected");
+    })  
+})  
+</script>
+</head>
+<body>
+
+	<div class="place">
+		<span>位置：</span>
+		<ul class="placeul">
+			<li><a href="#">首页</a></li>
+			<li><a href="#">用户列表</a></li>
+		</ul>
+	</div>
+
+	<table class="imgtable">
+	  <thead>
+	    <tr>
+	      <th>姓名</th>
+	      <th>性别</th>
+	      <th>年龄</th>
+	      <th>是否锁定</th>
+	      <th>身份</th>
+	      <th>注册时间</th>
+	      <th>最后登录时间</th>
+	      <th>操作</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr th:each="user : ${userPage.list}" >
+	      <td th:text="${user.username}">1,001</td>
+	      <td th:switch="${user.gender}">
+	      	<span th:case="1">男</span>
+	      	<span th:case="2">女</span>
+	      </td>
+	      
+	      <td th:text="${user.age}">Lorem</td>
+	      <td th:switch="${user.locked}">
+	      	<span th:case="1">正常</span>
+	      	<span th:case="0">锁定</span>
+	      </td>
+	      <td th:switch="${user.type}">
+	      	<span th:case="1">员工</span>
+	      	<span th:case="2">会员</span>
+	      	<span th:case="3">教练</span>
+	      </td>
+	      <td th:text="${#calendars.format(user.createTime,'yyyy-MM-dd')}">Lorem</td>
+	      <td th:text="${#calendars.format(user.lastloginTime,'yyyy-MM-dd hh:mm:ss')}">Lorem</td>
+	      <td>
+	      	<!-- <a th:href="'/membership/user/edit/'+${user.id}+'/'+${currentPage}" style="margin-right: 10%;"><img th:src="@{/static/images/bian.png}">&nbsp;&nbsp;编辑</a> -->
+	        <a th:href="'/membership/user/delete/' + ${user.id }+'/'+${currentPage}"><img th:src="@{/static/images/shan.png}">&nbsp;&nbsp;删除</a>
+	      </td>
+	    </tr>
+	  </tbody>
+	</table>
+	
+	<div class="pagin">
+		<div class="message">
+			共<i class="blue" th:text="${userPage.page.count}"></i>条记录，页次&nbsp;<i
+				class="blue" th:text="${currentPage }+'/'+${userPage.page.total }">&nbsp;</i>页
+		</div>
+		<ul class="paginList" th:if="${userPage.page.endPageIndex ne 0}">
+			<li class="paginItem"><a href="javascript: gotoPage(1)"
+				th:text="首页" style="cursor: hand;"> <span class="pagepre"></span>
+			</a></li>
+			<li th:each="num : ${#numbers.sequence(userPage.page.beginPageIndex, userPage.page.endPageIndex)}" class="paginItem current">
+				<a th:if="${num eq currentPage}" href="javascript:void(0);">
+                         <font color="red" th:text="${num}"></font>
+                    </a>
+
+                    <a th:if="${not(num eq currentPage)}" th:href="'/membership/user/list/'+${num}">
+                        <span th:text="${num}"></span>
+                    </a>				
+			</li>
+			<li class="paginItem"><a th:text="尾页"
+				th:href="'/membership/user/list/'+${userPage.page.total}"
+				style="cursor: hand;"><span class="pagenxt"></span> </a></li>
+		</ul>
+	</div>
+	</body>
+	<script type="text/javascript">
+    $('.imgtable tbody tr:odd').addClass('odd');
+    </script>
+<script type="text/javascript">
+	function gotoPage( pageNum ){
+		window.location.href = "/membership/user/list/" + pageNum;
+	}
+</script>
+</html>

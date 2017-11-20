@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--  
+    1. 配置 SecurityManager!
+    -->     
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="cacheManager" ref="cacheManager"/>
+        <property name="authenticator" ref="authenticator"></property>
+        <property name="realm" ref="myRealm" />
+        
+        <property name="rememberMeManager.cookie.maxAge" value="10"></property>
+    </bean>
+
+    <!-- Let's use some enterprise caching support for better performance.  You can replace this with any enterprise
+         caching framework implementation that you like (Terracotta+Ehcache, Coherence, GigaSpaces, etc -->
+    <!--  
+    2. 配置 CacheManager. 
+    2.1 需要加入 ehcache 的 jar 包及配置文件. 
+    -->     
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <!-- Set a net.sf.ehcache.CacheManager instance here if you already have one.  If not, a new one
+             will be creaed with a default config:
+             <property name="cacheManager" ref="ehCacheManager"/> -->
+        <!-- If you don't have a pre-built net.sf.ehcache.CacheManager instance to inject, but you want
+             a specific Ehcache configuration to be used, specify that here.  If you don't, a default
+             will be used.: -->
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/> 
+    </bean>
+    
+    <bean id="authenticator" 
+    	class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+    	<property name="authenticationStrategy">
+    		<bean class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy"></bean>
+    	</property>
+    </bean>
+
+    <!-- Used by the SecurityManager to access security data (users, roles, etc).
+         Many other realm implementations can be used too (PropertiesRealm,
+         LdapRealm, etc. -->
+    <!-- 
+    	3. 配置 Realm 
+    	3.1 直接配置实现了 org.apache.shiro.realm.Realm 接口的 bean
+    -->     
+    <bean id="myRealm" class="com.future.membership.shiro.SystemAuthorizingRealm">
+    	<property name="credentialsMatcher">
+    		<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+    			<property name="hashAlgorithmName" value="MD5"></property>
+    			<property name="hashIterations" value="2"></property>
+    		</bean>
+    	</property>
+    	<property name="cachingEnabled" value="false" />
+    </bean>
+    <!-- =========================================================
+         Shiro Spring-specific integration
+         ========================================================= -->
+    <!-- Post processor that automatically invokes init() and destroy() methods
+         for Spring-configured Shiro objects so you don't have to
+         1) specify an init-method and destroy-method attributes for every bean
+            definition and
+         2) even know which Shiro objects require these methods to be
+            called. -->
+    <!--  
+    4. 配置 LifecycleBeanPostProcessor. 可以自定的来调用配置在 Spring IOC 容器中 shiro bean 的生命周期方法. 
+    -->       
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- Enable Shiro Annotations for Spring-configured beans.  Only run after
+         the lifecycleBeanProcessor has run: -->
+    <!--  
+    5. 启用 IOC 容器中使用 shiro 的注解. 但必须在配置了 LifecycleBeanPostProcessor 之后才可以使用. 
+    -->     
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+	<!-- 基于Form表单的身份验证过滤器 -->
+	<bean id="formAuthenticationFilter"
+		class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+		<property name="usernameParam" value="username" />
+		<property name="passwordParam" value="password" />
+		<!-- <property name="rememberMeParam" value="rememberMe"/> -->
+		<property name="loginUrl" value="/login" />
+	</bean>
+
+    <!-- Define the Shiro Filter here (as a FactoryBean) instead of directly in web.xml -
+         web.xml uses the DelegatingFilterProxy to access this bean.  This allows us
+         to wire things with more control as well utilize nice Spring things such as
+         PropertiesPlaceholderConfigurer and abstract beans or anything else we might need: -->
+    <!--  
+    6. 配置 ShiroFilter. 
+    6.1 id 必须和 web.xml 文件中配置的 DelegatingFilterProxy 的 <filter-name> 一致.
+                      若不一致, 则会抛出: NoSuchBeanDefinitionException. 因为 Shiro 会来 IOC 容器中查找和 <filter-name> 名字对应的 filter bean.
+    -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="successUrl" value="/index"/>
+        <property name="unauthorizedUrl" value="/unauthorized.html"/><!-- 未授权的页面 -->
+        <property name="filters">
+			<map>
+				<entry key="authc" value-ref="formAuthenticationFilter" />
+			</map>
+		</property>
+        <!-- <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"></property> -->
+        
+        <!--  
+        	配置哪些页面需要受保护. 
+        	以及访问这些页面需要的权限. 
+        	1). anon 可以被匿名访问
+        	2). authc 必须认证(即登录)后才可能访问的页面. 
+        	3). logout 登出.
+        	4). roles 角色过滤器
+        -->
+         
+        <property name="filterChainDefinitions">
+            <value>
+                /membership/login = anon
+                /membership/logout = logout
+                
+                <!-- /user.jsp = roles[user]
+                /admin.jsp = roles[admin] -->
+                <!-- /login = authc -->
+                # everything else requires authentication:
+                /** = authc
+            </value>
+        </property>
+    </bean>
+</beans>
